@@ -185,7 +185,13 @@ export function checker(userConfig: UserPluginConfig): Plugin {
               // for test injection and customize logger in the future
               Checker.log(action)
             } else {
-              logger!.error(action.payload)
+              // Bypass logger.error if it's just the summary message
+              // untested on anything outside of eslint and typescript
+              if (action.payload.includes('0 error')) {
+                logger!.info(action.payload)
+              } else {
+                logger!.error(action.payload)
+              }
             }
           }
         })
